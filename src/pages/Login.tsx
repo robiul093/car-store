@@ -1,7 +1,16 @@
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../redux/api/baseApi";
+import { verifyToken } from "../utils/verifyToken";
+import { useAppDispatch } from "../redux/hook";
+import { setUser } from "../redux/features/auth/authSlice";
+import { toast } from "sonner";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 export default function Login() {
+
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     type IForm = {
         email: String,
@@ -9,9 +18,39 @@ export default function Login() {
     }
 
     const { handleSubmit, register, formState: { errors }, } = useForm<IForm>()
+    const [login, { error }] = useLoginMutation()
+    // console.log(error?.data?.error?.errors)
 
-    const onsubmit = (data: IForm) => {
-        console.log(data)
+    if (error) {
+        if ("data" in error) {
+            const errorMessage = (error as FetchBaseQueryError).data as { error?: { errors?: string } };
+            toast.error(errorMessage.error?.errors || "An unknown error occurred.");
+        } else {
+            toast.error("An unexpected error occurred.");
+        }
+    }
+
+
+    const onsubmit = async (data: IForm) => {
+        const userInfo = {
+            email: data.email,
+            password: data.password
+        };
+
+        const res = await login(userInfo).unwrap();
+
+        const toastId = toast.loading('Login.....')
+        const token = res?.data;
+        const user = verifyToken(token);
+
+        dispatch(setUser({ user: user, token: token }));
+        toast.success('Login in successfull', { id: toastId });
+
+        if (user) {
+            navigate('/')
+        };
+
+
     }
 
     return (
@@ -36,7 +75,7 @@ export default function Login() {
                             className="input w-full px-4 py-2 border-[1.5px] rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-black opacity-60 text-white"
                             placeholder="Email"
                         />
-                        <p className="text-white ml-3 flex justify-start">{errors.email?.message}</p>
+                        <p className="text-[#BD1616] font-semibold text-[14px] ml-3 flex justify-start">{errors.email?.message}</p>
                     </div>
 
                     <div className="space-y-1.5">
@@ -47,7 +86,7 @@ export default function Login() {
                             className="input w-full px-4 py-2 border-[1.5px] rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-black opacity-60 text-white"
                             placeholder="Password"
                         />
-                        <p className="text-white ml-3 flex justify-start">{errors.password?.message}</p>
+                        <p className="text-[#BD1616] font-semibold text-[14px] ml-3 flex justify-start">{errors.password?.message}</p>
                     </div>
 
                     <button className="btn btn-neutral mt-4 w-full py-2 rounded-md">

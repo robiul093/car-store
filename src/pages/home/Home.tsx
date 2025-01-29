@@ -1,10 +1,11 @@
 import Banner from "./Banner";
+import FeaturedProduct from "./FeaturedProduct";
 
 export default function Home() {
     return (
         <div>
-            <h2>This is home components</h2>
             <Banner />
+            <FeaturedProduct />
         </div>
     )
 }

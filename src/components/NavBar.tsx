@@ -1,4 +1,6 @@
 import { NavLink } from "react-router-dom"
+import { useAppDispatch, useAppSelector } from "../redux/hook";
+import { logOut } from "../redux/features/auth/authSlice";
 
 export default function NavBar() {
 
@@ -8,10 +10,14 @@ export default function NavBar() {
             path: '/',
         },
         // <NavLink to='/'><a>Home</a></NavLink>,
-    ]
+    ];
+
+    const user = useAppSelector((state) => state.auth.user);
+    const dispatch = useAppDispatch();
+    const userName = user?.name
 
     return (
-        <div className="navbar rounded-lg bg-base-100 shadow-sm">
+        <div className="navbar rounded-lg bg-[#202020] shadow-sm mb-2">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -30,24 +36,39 @@ export default function NavBar() {
                     </div>
                     <ul
                         tabIndex={0}
-                        className="menu menu-sm dropdown-content font-medium text-[16px] space-x-4 bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                        className="menu menu-sm dropdown-content font-medium text-[16px] space-x-4 bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-white">
                         {
                             links.map((item) => <NavLink key={item.path} to={item.path}>{item.name}</NavLink>)
                         }
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl">daisyUI</a>
+                <a className="btn btn-ghost text-xl text-white">daisyUI</a>
             </div>
             <div className="navbar-center hidden lg:flex">
-                <ul className="menu space-x-4 font-medium text-[16px] menu-horizontal px-1">
+                <ul className="menu space-x-4 font-medium text-[16px] menu-horizontal px-1 text-white">
                     {
                         links.map((item) => <NavLink key={item.path} to={item.path}>{item.name}</NavLink>)
                     }
                 </ul>
             </div>
             <div className="navbar-end space-x-3">
-                <NavLink className="btn rounded-sm" to='/login'>Login</NavLink>
-                <NavLink className="btn rounded-sm" to='/register'>Register</NavLink>
+                {
+                    user
+                        ? <div className="avatar dropdown dropdown-hover dropdown-bottom dropdown-end">
+                            <div tabIndex={0} className="w-12 rounded-full ">
+                                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                            </div>
+                            <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-32 p-2 shadow-sm text-center">
+                                <li><a>{userName}</a></li>
+                                <li onClick={() => dispatch(logOut())}><a>Logout</a></li>
+                            </ul>
+                        </div>
+
+                        : <div className="space-x-3">
+                            <NavLink className="btn border-0 rounded-sm bg-[#03995B] text-white" to='/login'>Login</NavLink>
+                            <NavLink className="btn border-0 rounded-sm text-[#03995B] " to='/register'>Register</NavLink>
+                        </div>
+                }
             </div>
         </div>
     )
