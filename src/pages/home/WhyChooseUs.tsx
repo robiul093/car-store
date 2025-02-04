@@ -28,7 +28,7 @@ export default function WhyChooseUs() {
         </div>
 
         <div className="w-[400px] ">
-
+          
 
         </div>
 

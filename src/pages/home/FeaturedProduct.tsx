@@ -1,7 +1,17 @@
 import { FaCircleArrowRight } from "react-icons/fa6";
 import FeaturedCard from "../../components/FeaturedCard";
+import { useGetAllCarsQuery } from "../../redux/features/product/productApi";
 
 export default function FeaturedProduct() {
+
+    const {data, isLoading} = useGetAllCarsQuery(undefined);
+    const products = data?.data;
+    console.log(data, products)
+    
+    if(isLoading){
+        return <h2>Loading......</h2>
+    }
+    
     return (
         <div className="bg-[#101010] text-white my-10 px-8 py-14 rounded-2xl">
             <div className="flex justify-between items-center pt-7 pb-14">
@@ -11,12 +21,15 @@ export default function FeaturedProduct() {
             </div>
 
             <div className="grid grid-cols-3 gap-5">
+                {
+                    products?.slice(0,6).map((product: any, index: number) => <FeaturedCard key={index} product={product} />)
+                }
+                {/* <FeaturedCard />
                 <FeaturedCard />
                 <FeaturedCard />
                 <FeaturedCard />
                 <FeaturedCard />
-                <FeaturedCard />
-                <FeaturedCard />
+                <FeaturedCard /> */}
             </div>
         </div>
     )

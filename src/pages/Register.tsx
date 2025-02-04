@@ -1,11 +1,11 @@
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
-import { useRegisterMutation } from "../redux/api/baseApi";
 import { toast } from "sonner";
 import { useAppDispatch } from "../redux/hook";
 import { setUser } from "../redux/features/auth/authSlice";
 import { verifyToken } from "../utils/verifyToken";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import { useRegisterMutation } from "../redux/features/auth/authApi";
 
 export default function Register() {
 

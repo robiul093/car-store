@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router-dom"
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { logOut } from "../redux/features/auth/authSlice";
 
@@ -9,13 +9,27 @@ export default function NavBar() {
             name: 'Home',
             path: '/',
         },
+        {
+            name: 'All Products',
+            path: '/products'
+        },
+        {
+            name: 'About',
+            path: '/about'
+        },
         // <NavLink to='/'><a>Home</a></NavLink>,
     ];
 
     const user = useAppSelector((state) => state.auth.user);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const userName = user?.name
 
+    const handelLogout = () => {
+        dispatch(logOut());
+        navigate('/login');
+    };
+    
     return (
         <div className="navbar rounded-lg bg-[#202020] shadow-sm mb-2">
             <div className="navbar-start">
@@ -42,10 +56,10 @@ export default function NavBar() {
                         }
                     </ul>
                 </div>
-                <a className="btn btn-ghost text-xl text-white">daisyUI</a>
+                <a className="btn btn-ghost text-xl text-white">LUXED</a>
             </div>
             <div className="navbar-center hidden lg:flex">
-                <ul className="menu space-x-4 font-medium text-[16px] menu-horizontal px-1 text-white">
+                <ul className="menu space-x-6 font-medium text-[16px] menu-horizontal px-1 text-white">
                     {
                         links.map((item) => <NavLink key={item.path} to={item.path}>{item.name}</NavLink>)
                     }
@@ -60,7 +74,7 @@ export default function NavBar() {
                             </div>
                             <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-32 p-2 shadow-sm text-center">
                                 <li><a>{userName}</a></li>
-                                <li onClick={() => dispatch(logOut())}><a>Logout</a></li>
+                                <li onClick={() => handelLogout() }><a>Logout</a></li>
                             </ul>
                         </div>
 

@@ -1,6 +1,11 @@
 import { MdOutlineArrowOutward } from "react-icons/md";
 
-export default function FeaturedCard() {
+type TProduct = {
+    product : any
+}
+
+export default function FeaturedCard({product}: TProduct) {
+    console.log(product)
     return (
         <div className="group bg-base-100 w- shadow-sm rounded-xl">
             {/* <figure> */}
