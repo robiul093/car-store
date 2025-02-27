@@ -7,9 +7,9 @@ function AllProductsPage() {
 
     const { data, isLoading } = useGetAllCarsQuery(undefined);
     const products = data?.data
-    console.log(data)
+
     if (isLoading) {
-        <div>
+        return <div>
             <span className="loading loading-ring loading-md"></span>
             <span className="loading loading-ring loading-lg"></span>
             <span className="loading loading-ring loading-xl"></span>
@@ -20,9 +20,9 @@ function AllProductsPage() {
         <div>
             <NavBar />
             <div>
-                
+
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {
                     products?.map((product: any, index: number) => <FeaturedCard key={index} product={product} />)
                 }

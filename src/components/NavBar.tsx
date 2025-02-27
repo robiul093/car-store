@@ -17,6 +17,10 @@ export default function NavBar() {
             name: 'About',
             path: '/about'
         },
+        {
+            name: 'Dashboard',
+            path: '/dashboard'
+        },
         // <NavLink to='/'><a>Home</a></NavLink>,
     ];
 
@@ -37,7 +41,7 @@ export default function NavBar() {
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            className="h-5 w-5"
+                            className="h-5 w-5 text-white"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -50,7 +54,7 @@ export default function NavBar() {
                     </div>
                     <ul
                         tabIndex={0}
-                        className="menu menu-sm dropdown-content font-medium text-[16px] space-x-4 bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-white">
+                        className="menu menu-sm dropdown-content font-medium text-[16px] space-x-4 bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-black">
                         {
                             links.map((item) => <NavLink key={item.path} to={item.path}>{item.name}</NavLink>)
                         }

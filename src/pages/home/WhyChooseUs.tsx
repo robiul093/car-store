@@ -5,14 +5,14 @@ import { TbDatabaseDollar } from "react-icons/tb";
 
 export default function WhyChooseUs() {
   return (
-    <div>
-      <div className="w-[650px] mx-auto">
+    <div className="w-full mx-auto">
+      <div className="md:w-[650px] mx-auto">
         <h2 className="text-4xl mb-6 text-[#1D0A0A]">Why <span className='text-[#c7b933]'>Choose</span> Us </h2>
         <p className="text-gray-400">🚗 Top-Quality Cars, Best Deals & Easy Buying! Certified vehicles, great prices, flexible financing, and hassle-free trade-ins—trusted by thousands! 🌟</p>
       </div>
 
-      <div className="lg:flex mt-14">
-        <div className="w-[400px] space-y-10 pl-5">
+      <div className="md:flex justify-center mt-14 space-y-10 w-full mx-auto">
+        <div className="md:w-[400px] space-y-10 pl-5">
           <div className="text-start space-y-4">
             <FaCar className="text-3xl text-[#03995B]" />
             <h2 className="text-xl font-medium">Wide Selection of Vehicles</h2>
@@ -27,12 +27,12 @@ export default function WhyChooseUs() {
 
         </div>
 
-        <div className="w-[400px] ">
+        {/* <div className="md:w-[400px] ">
           
 
-        </div>
+        </div> */}
 
-        <div className="w-[400px] space-y-10 pl-5">
+        <div className="md:w-[400px]  space-y-10 pl-5">
           <div className="text-start space-y-4">
             <TbDatabaseDollar className="text-3xl text-[#03995B]" />
             <h2 className="text-xl font-medium">Flexible Financing Options</h2>

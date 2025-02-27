@@ -13,4 +13,4 @@ export const productApi = baseApi.injectEndpoints({
 });
 
 
-export const {useGetAllCarsQuery} = productApi;
+export const { useGetAllCarsQuery } = productApi;

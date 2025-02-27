@@ -29,14 +29,14 @@ export default function FAQ() {
     ];
 
     return (
-        <div className=" px-14 my-20 items-center">
+        <div className=" md:px-14 my-20 items-center">
             <div className=" text-start">
-                <h2 className="text-4xl mb-10">Frequently Asked <br /> <span className="text-[#c7b933]">Questions</span></h2>
+                <h2 className="text-3xl md:text-4xl mb-10">Frequently Asked <br /> <span className="text-[#c7b933]">Questions</span></h2>
 
             </div>
 
-            <div className='flex gap-6'>
-                <div className='w-[40%] h-full p-3 border-3 border-gray-700 rounded-xl inline-block'>
+            <div className='md:flex items-center gap-6'>
+                <div className='w-full md:w-[40%] h-full p-3 border-3 border-gray-700 rounded-xl inline-block'>
                     <div className='w-full h-full'>
                         <img
                             className='w-full h-full rounded-3xl box-border'
@@ -46,7 +46,7 @@ export default function FAQ() {
                     </div>
                 </div>
 
-                <div className="w-[60%] text-start">
+                <div className="w-full md:w-[60%] text-start">
                     {faqItems.map((item, index) => (
                         <div
                             key={index}

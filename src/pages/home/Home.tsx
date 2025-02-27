@@ -5,7 +5,7 @@ import FeaturedProduct from "./FeaturedProduct";
 
 export default function Home() {
     return (
-        <div>
+        <div className="space-y-4">
             <Banner />
             <FeaturedProduct />
             <FAQ />
