@@ -7,7 +7,7 @@ export default function WhyChooseUs() {
   return (
     <div className="w-full mx-auto">
       <div className="md:w-[650px] mx-auto">
-        <h2 className="text-4xl mb-6 text-[#1D0A0A]">Why <span className='text-[#c7b933]'>Choose</span> Us </h2>
+        <h2 className="text-4xl mb-6 text-white">Why <span className='text-[#c7b933]'>Choose</span> Us </h2>
         <p className="text-gray-400">🚗 Top-Quality Cars, Best Deals & Easy Buying! Certified vehicles, great prices, flexible financing, and hassle-free trade-ins—trusted by thousands! 🌟</p>
       </div>
 

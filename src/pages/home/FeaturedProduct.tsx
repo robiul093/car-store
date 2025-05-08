@@ -7,10 +7,10 @@ export default function FeaturedProduct() {
 
     const { data, isLoading } = useGetAllCarsQuery(undefined);
     const products = data?.data;
-    console.log(data, products)
+    // console.log(data, products)
 
     return (
-        <div className="bg-[#101010] text-white my-10 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-8 md:py-14 rounded-2xl">
+        <div className="bg-[#101010] text-white my-10 px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12 py-8 md:py-14 rounded-2xl drop-shadow-lg">
 
             <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8 pt-7 pb-14">
 
@@ -29,7 +29,7 @@ export default function FeaturedProduct() {
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 md:gap-3 lg:gap-3">
                 {
                     isLoading ? (
                         <div>

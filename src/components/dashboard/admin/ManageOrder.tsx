@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { useManageAllOrderQuery } from "../../../redux/features/admin/adminApi"
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 export type TProduct = {
     car: string,
@@ -11,10 +12,11 @@ export type TProduct = {
     updatedAt: string,
     __v: number,
     _id: string,
+    user?: string,
 }
 export default function ManageOrder() {
 
-    const { data, isLoading, isSuccess, isError, error } = useManageAllOrderQuery(undefined);
+    const { data, isLoading, isSuccess, error } = useManageAllOrderQuery(undefined);
 
     const userToastId = 'toastId';
     if (isLoading) {
@@ -25,11 +27,16 @@ export default function ManageOrder() {
         toast.success(data.message, { id: userToastId });
     };
 
-    if (isError) {
-        toast.error(JSON.stringify(error?.data?.message), { id: userToastId })
-    };
+    if (error) {
+        if ((error as FetchBaseQueryError)?.data) {
+            const errorData = (error as FetchBaseQueryError).data as { message?: string };
+            toast.error(errorData?.message || "Something went wrong", { id: userToastId });
+        } else {
+            toast.error("An unknown error occurred", { id: userToastId });
+        }
+    }
 
-    console.log(data);
+    // console.log(data);
     return (
         <div>
             <h2 className="text-start text-2xl mb-3">Total Order: {data?.data?.length}</h2>
@@ -41,7 +48,7 @@ export default function ManageOrder() {
                         <tr>
                             <th></th>
                             <th>Email</th>
-                            <th>User Status</th>
+                            <th>Order Status</th>
                             <th>Total Price</th>
                             {/* <th>Change Status</th> */}
                         </tr>
@@ -51,7 +58,9 @@ export default function ManageOrder() {
                             data?.data?.map((user: TProduct, idx: number) => <tr key={idx}>
                                 <th>{idx + 1}</th>
                                 <td>{user?.email}</td>
-                                <td>{user?.status}</td>
+                                <td className={`${user?.status === 'Pending' ? 'text-yellow-400' : ''}
+                                    ${user?.status === 'Paid' ? 'text-green-400' : ''}
+                                `}>{user?.status}</td>
                                 <td>{user?.totalPrice}</td>
                                 {/* <td onClick={() => handelStatusChange(user)} className={`btn ${user?.isActive ? 'bg-green-400' : 'bg-red-400'}`}>{user?.isActive ? 'Active' : 'InActive'}{statusLoading ? <span className="loading loading-spinner loading-sm"></span> : ''}</td> */}
                                 {/* <td className="btn"> {user?.isActive ? 'Active' } </td> */}

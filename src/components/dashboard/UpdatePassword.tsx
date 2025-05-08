@@ -2,10 +2,12 @@ import { useState } from "react";
 import { useAppSelector } from "../../redux/hook";
 import { toast } from "sonner";
 import { useChangePasswordMutation } from "../../redux/features/auth/authApi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 export default function UpdatePassword() {
-    const [changePassword, { isLoading, data, isError, isSuccess, error }] = useChangePasswordMutation();
+    const [changePassword, { isLoading, data, isSuccess, error }] = useChangePasswordMutation();
     const user = useAppSelector((state) => state.auth.user);
+
     const [formData, setFormData] = useState({
         currentPassword: "",
         newPassword: "",
@@ -28,7 +30,7 @@ export default function UpdatePassword() {
             newPassword: formData.newPassword,
         }
 
-console.log(data, error)
+        // console.log(data, error)
         changePassword(changePasswordInfo)
 
         const pId = 'passwordChangeId'
@@ -36,7 +38,15 @@ console.log(data, error)
 
         if (isSuccess) toast.success(data?.message, { id: pId });
 
-        if (isError) toast.error(error?.data?.message, { id: pId });
+        if (error) {
+            if ((error as FetchBaseQueryError)?.data) {
+                const errorData = (error as FetchBaseQueryError).data as { message?: string };
+                toast.error(errorData?.message || "Something went wrong", { id: pId });
+                // console.log(errorData.message)
+            } else {
+                toast.error("An unknown error occurred", { id: pId });
+            }
+        }
     };
 
     return (

@@ -12,6 +12,7 @@ import SingleUserOrder from "../components/dashboard/SingleUserOrder";
 import ManageUser from "../components/dashboard/admin/ManageUser";
 import ManageOrder from "../components/dashboard/admin/ManageOrder";
 import VerifyOrder from "../pages/VerifyOrder";
+// import Dashboard from "../components/dashboard/Dashboard";
 
 
 
@@ -42,11 +43,11 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "user",
-        // element: <DashboardLayout />,
+        // element: <Dashboard />,
         children: [
-          { index: true, path: "profile", element: <ProductDetails /> },
-          { path: "orders", element: <SingleUserOrder /> },
-          { path: "update-password", element: <UpdatePassword /> },
+          { index: true, path: "profile", element: <PrivateRouts><ProductDetails /></PrivateRouts> },
+          { path: "orders", element: <PrivateRouts><SingleUserOrder /></PrivateRouts> },
+          { path: "update-password", element: <PrivateRouts><UpdatePassword /></PrivateRouts> },
         ],
       },
 
@@ -54,9 +55,9 @@ export const router = createBrowserRouter([
         path: "admin",
         // element: <AdminDashboard />,
         children: [
-          { path: "manage-users", element: <ManageUser /> },
-          { path: "manage-products", element: <AllProductsPage /> },
-          { path: "manage-orders", element: <ManageOrder /> },
+          { path: "manage-users", element: <PrivateRouts><ManageUser /></PrivateRouts> },
+          { path: "manage-products", element: <PrivateRouts><AllProductsPage /></PrivateRouts> },
+          { path: "manage-orders", element: <PrivateRouts><ManageOrder /></PrivateRouts> },
         ],
       },
     ]

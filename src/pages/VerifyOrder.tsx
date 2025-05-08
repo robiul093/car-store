@@ -46,7 +46,7 @@ export default function VerifyOrder() {
             refetchOnMountOrArgChange: true,
         }
     );
-console.log(data)
+// console.log(data)
     if (isLoading) {
         return <div>
             <span className="loading loading-ring loading-md"></span>

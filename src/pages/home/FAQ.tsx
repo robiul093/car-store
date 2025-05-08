@@ -52,7 +52,7 @@ export default function FAQ() {
                             key={index}
                             className={`collapse border border-base-300 relative my-2  ${openIndex === index
                                 ? 'bg-[#03995B] text-white'
-                                : 'bg-base-100'
+                                : 'bg-base-100 text-black'
                                 }`}
                         >
                             <input

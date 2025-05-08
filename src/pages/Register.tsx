@@ -37,7 +37,7 @@ export default function Register() {
     };
 
     const res = await regestation(userInfo).unwrap();
-    console.log(res)
+    // console.log(res)
 
     const toastId = toast.loading('Registering.....')
     const token = res?.data;

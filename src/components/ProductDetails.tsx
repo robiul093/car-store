@@ -4,6 +4,7 @@ import { TProduct } from "./FeaturedCard";
 import { useCreateOrderMutation } from "../redux/features/order/orderApi";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 
 export default function ProductDetails() {
@@ -15,6 +16,9 @@ export default function ProductDetails() {
 
     const product: TProduct | undefined = products ? products.find((item: TProduct) => item._id === id) : undefined;
 
+
+    const orderId = 'orderId'
+
     useEffect(() => {
         if (orderLoading) {
             toast.loading('Order is Creating....', { id: orderId });
@@ -23,7 +27,7 @@ export default function ProductDetails() {
         if (isOrderSuccess) {
             toast.success(orderData?.message, { id: orderId });
             if (orderData?.data) {
-                console.log(orderData?.data)
+                // console.log(orderData?.data)
                 window.location.href = orderData.data;
             };
         };
@@ -42,15 +46,18 @@ export default function ProductDetails() {
             <span className="loading loading-ring loading-lg"></span>
             <span className="loading loading-ring loading-xl"></span>
         </div>
+    };
+
+    if (isError) {
+        toast.error(JSON.stringify((error as FetchBaseQueryError).data))
     }
 
-    const orderId = 'orderId'
 
     const handelBuyCar = async () => {
         if (!product) return;
 
         await createOrder({ carId: product._id, quantity: 1 });
-        console.log(product)
+        // console.log(product)
     };
 
 
