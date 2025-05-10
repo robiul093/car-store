@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 function AllProductsPage() {
   const navigate = useNavigate();
-  const [totalPages, setTotalPages] = useState(3);
+  const [initialTotalPages] = useState(3);
   // Get query parameters with defaults
   const searchParams = new URLSearchParams(window.location.search);
   const page = Number(searchParams.get("page") || "1");
@@ -19,9 +19,8 @@ function AllProductsPage() {
 
   const [selectedBrand, setSelectedBrand] = useState(brand);
   const [selectedCategory, setSelectedCategory] = useState(category);
-  const { data, isLoading } = useGetAllCarsQuery(undefined);
-  const products = data?.data;
-  const condition = searchParams.get("condition") || "";
+
+  // const condition = searchParams.get("condition") || "";
   const minPrice = Number(searchParams.get("price[gte]") || "0");
   const maxPrice = Number(searchParams.get("price[lte]") || "10000");
   const sortBy = searchParams.get("sortBy") || "createdAt";
@@ -32,97 +31,154 @@ function AllProductsPage() {
     maxPrice,
   ]);
   const [searchInputValue, setSearchInputValue] = useState(searchQuery);
-  const PRODUCTS_PER_PAGE = 12;
+  const PRODUCTS_PER_PAGE = 9;
+
+  const { data, isLoading } = useGetAllCarsQuery({
+    page,
+    limit: PRODUCTS_PER_PAGE,
+    search: searchQuery,
+    brand: selectedBrand,
+    category: selectedCategory,
+    "price[gte]": priceRange[0] > 0 ? priceRange[0] : undefined,
+    "price[lte]": priceRange[1] < 10000 ? priceRange[1] : undefined,
+    sortBy,
+    sortOrder,
+    // Add this to ensure numeric sorting
+    numericSort: sortBy === "price" ? "true" : undefined,
+  });
+  const products = data?.data?.result || [];
+  const totalPages = data?.data?.meta?.totalPage || initialTotalPages;
+  console.log(data);
 
   // Update URL with filters
   const updateFilters = (
     newFilters: Record<string, string | number | null>
   ) => {
-    const params = new URLSearchParams();
+    const params = new URLSearchParams(window.location.search);
 
-    // Add current params
-    if (page > 1) params.set("page", page.toString());
-    params.set("limit", PRODUCTS_PER_PAGE.toString());
-    if (searchQuery) params.set("search", searchQuery);
-    if (brand) params.set("brand", brand);
-    if (category) params.set("category", category);
-    if (condition) params.set("condition", condition);
-    if (minPrice > 0) params.set("price[gte]", minPrice.toString());
-    if (maxPrice < 10000) params.set("price[lte]", maxPrice.toString());
-    if (sortBy) params.set("sortBy", sortBy);
-    if (sortOrder) params.set("sortOrder", sortOrder);
+    // Preserve all existing filters unless they're being overwritten
+    const currentFilters = {
+      search: params.get("search") || "",
+      brand: params.get("brand") || "",
+      category: params.get("category") || "",
+      "price[gte]": params.get("price[gte]") || "0",
+      "price[lte]": params.get("price[lte]") || "10000",
+      sortBy: params.get("sortBy") || "createdAt",
+      sortOrder: params.get("sortOrder") || "desc",
+      page: params.get("page") || "1",
+    };
 
-    // Update with new filters
-    Object.entries(newFilters).forEach(([key, value]) => {
-      if (value === null || value === "") {
-        params.delete(key);
-      } else {
-        params.set(key, value.toString());
+    // Merge with new filters
+    const mergedFilters = { ...currentFilters, ...newFilters };
+
+    // Clear all params and only set the ones with values
+    const newParams = new URLSearchParams();
+
+    // Set all filters that have values
+    Object.entries(mergedFilters).forEach(([key, value]) => {
+      if (value && value !== "" && value !== "0" && value !== "10000") {
+        newParams.set(key, value.toString());
       }
     });
 
-    // Reset to page 1 when filters change
-    if (Object.keys(newFilters).some((key) => key !== "page")) {
-      params.set("page", "1");
-    }
+    // Always keep page and limit
+    newParams.set("page", mergedFilters.page?.toString() || "1");
+    newParams.set("limit", PRODUCTS_PER_PAGE.toString());
 
-    navigate(`?${params.toString()}`);
+    navigate(`?${newParams.toString()}`);
   };
 
   useEffect(() => {
-    // Update products when filters change
-    const params = new URLSearchParams();
-    if (searchInputValue) params.set("search", searchInputValue);
-    if (priceRange[0] > 0) params.set("price[gte]", priceRange[0].toString());
-    if (priceRange[1] < 10000)
-      params.set("price[lte]", priceRange[1].toString());
-    navigate(`?${params.toString()}`);
-  }, [searchInputValue, priceRange]);
+    const params = new URLSearchParams(window.location.search);
+
+    // Only update state if the URL params changed
+    if (params.get("search") !== searchInputValue) {
+      setSearchInputValue(params.get("search") || "");
+    }
+    if (params.get("brand") !== selectedBrand) {
+      setSelectedBrand(params.get("brand") || "");
+    }
+    if (params.get("category") !== selectedCategory) {
+      setSelectedCategory(params.get("category") || "");
+    }
+    if (
+      params.get("price[gte]") !== priceRange[0].toString() ||
+      params.get("price[lte]") !== priceRange[1].toString()
+    ) {
+      setPriceRange([
+        Number(params.get("price[gte]") || 0),
+        Number(params.get("price[lte]") || 10000),
+      ]);
+    }
+  }, [window.location.search]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    const params = new URLSearchParams(window.location.search);
-    params.set("search", searchInputValue);
-    navigate(`?${params.toString()}`);
+    updateFilters({
+      search: searchInputValue,
+      page: 1, // Reset to first page on new search
+    });
   };
 
   const handlePriceApply = () => {
-    const params = new URLSearchParams(window.location.search);
-    params.set("price[gte]", priceRange[0].toString());
-    params.set("price[lte]", priceRange[1].toString());
-    navigate(`?${params.toString()}`);
+    updateFilters({
+      "price[gte]": priceRange[0],
+      "price[lte]": priceRange[1],
+      // Keep all other filters
+    });
   };
 
   const handlePriceReset = () => {
     setPriceRange([0, 10000]);
-    const params = new URLSearchParams(window.location.search);
-    params.delete("price[gte]");
-    params.delete("price[lte]");
-    navigate(`?${params.toString()}`);
+    updateFilters({ "price[gte]": null, "price[lte]": null });
   };
 
   const handleBrandSelect = (brand: string) => {
-    setSelectedBrand(brand);
-    updateFilters({ brand });
+    const newBrand = selectedBrand === brand ? "" : brand;
+    setSelectedBrand(newBrand);
+    updateFilters({
+      brand: newBrand,
+      page: 1, // Reset to first page when changing filters
+    });
   };
 
   const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
-    updateFilters({ category });
+    const newCategory = selectedCategory === category ? "" : category;
+    setSelectedCategory(newCategory);
+    updateFilters({
+      category: newCategory,
+      page: 1, // Reset to first page when changing filters
+    });
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const [newSortBy, newSortOrder] = e.target.value.split(":");
+    updateFilters({
+      sortBy: newSortBy,
+      sortOrder: newSortOrder,
+      // Don't reset page here - let updateFilters handle it
+    });
   };
 
   const getActiveFilters = () => {
     const filters = [];
-    if (searchQuery) filters.push({ type: "search", value: searchQuery });
-    if (selectedBrand) filters.push({ type: "brand", value: selectedBrand });
-    if (selectedCategory)
-      filters.push({ type: "category", value: selectedCategory });
-    if (priceRange[0] > 0 || priceRange[1] < 10000) {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("search"))
+      filters.push({ type: "search", value: params.get("search")! });
+    if (params.get("brand"))
+      filters.push({ type: "brand", value: params.get("brand")! });
+    if (params.get("category"))
+      filters.push({ type: "category", value: params.get("category")! });
+    if (params.get("price[gte]") || params.get("price[lte]")) {
       filters.push({
         type: "price",
-        value: `$${priceRange[0]} - $${priceRange[1]}`,
+        value: `$${params.get("price[gte]") || 0} - $${
+          params.get("price[lte]") || 10000
+        }`,
       });
     }
+
     return filters;
   };
 
@@ -164,15 +220,15 @@ function AllProductsPage() {
     });
   };
 
-  if (isLoading) {
-    return (
-      <div>
-        <span className="loading loading-ring loading-md"></span>
-        <span className="loading loading-ring loading-lg"></span>
-        <span className="loading loading-ring loading-xl"></span>
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div>
+  //       <span className="loading loading-ring loading-md"></span>
+  //       <span className="loading loading-ring loading-lg"></span>
+  //       <span className="loading loading-ring loading-xl"></span>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div>
@@ -239,14 +295,14 @@ function AllProductsPage() {
                 <select
                   id="sort"
                   className="border bg-black rounded-md px-2 py-1"
-                  value={sortBy}
-                  onChange={(e) => updateFilters({ sortBy: e.target.value })}
+                  onChange={handleSortChange}
+                  value={`${sortBy}:${sortOrder}`}
                 >
-                  <option value="createdAt">Newest</option>
-                  <option value="price">Price: Low to High</option>
-                  <option value="-price">Price: High to Low</option>
-                  <option value="name">Name: A to Z</option>
-                  <option value="-name">Name: Z to A</option>
+                  <option value="createdAt:desc">Newest</option>
+                  <option value="price:asc">Price: Low to High</option>
+                  <option value="price:desc">Price: High to Low</option>
+                  <option value="name:asc">Name: A to Z</option>
+                  <option value="name:desc">Name: Z to A</option>
                 </select>
               </div>
             </div>
@@ -299,17 +355,19 @@ function AllProductsPage() {
                 Brands
               </h2>
               <ul className="space-y-2 text-start w-full">
-                {["Brand 1", "Brand 2", "Brand 3", "Brand 4"].map((brand) => (
-                  <li
-                    key={brand}
-                    className={`hover:bg-white hover:text-black pl-5 rounded py-2 ${
-                      selectedBrand === brand ? "bg-gray-200 text-black" : ""
-                    }`}
-                    onClick={() => handleBrandSelect(brand)}
-                  >
-                    {brand}
-                  </li>
-                ))}
+                {["Toyota", "Honda", "Ford", "BMW", "Chevrolet", "Audi"].map(
+                  (brand) => (
+                    <li
+                      key={brand}
+                      className={`hover:bg-white hover:text-black pl-5 rounded py-2 ${
+                        selectedBrand === brand ? "bg-gray-200 text-black" : ""
+                      }`}
+                      onClick={() => handleBrandSelect(brand)}
+                    >
+                      {brand}
+                    </li>
+                  )
+                )}
               </ul>
             </div>
             <div className="flex flex-col items-center justify-center border-gray-300 border p-4 rounded-lg shadow-md mb-4 w-full max-w-sm overflow-hidden">
@@ -317,88 +375,96 @@ function AllProductsPage() {
                 Categories
               </h2>
               <ul className="space-y-2 text-start w-full">
-                {["Category 1", "Category 2", "Category 3", "Category 4"].map(
-                  (category) => (
-                    <li
-                      key={category}
-                      className={`hover:bg-white hover:text-black pl-5 rounded py-2 ${
-                        selectedCategory === category
-                          ? "bg-gray-200 text-black"
-                          : ""
-                      }`}
-                      onClick={() => handleCategorySelect(category)}
-                    >
-                      {category}
-                    </li>
-                  )
-                )}
+                {[
+                  "Sedan",
+                  "SUV",
+                  "Hatchback",
+                  "Coupe",
+                  "Convertible",
+                  "Electric",
+                  "Diesel",
+                  "Luxury",
+                ].map((category) => (
+                  <li
+                    key={category}
+                    className={`hover:bg-white hover:text-black pl-5 rounded py-2 ${
+                      selectedCategory === category
+                        ? "bg-gray-200 text-black"
+                        : ""
+                    }`}
+                    onClick={() => handleCategorySelect(category)}
+                  >
+                    {category}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
           <div className="w-[75%] h-full">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {products?.map((product: any, index: number) => (
-                <FeaturedCard key={index} product={product} />
-              ))}
+            <div>
+              {isLoading ? (
+                <div className="flex justify-center items-center h-64">
+                  <span className="loading loading-ring loading-md"></span>
+                  <span className="loading loading-ring loading-lg"></span>
+                  <span className="loading loading-ring loading-xl"></span>
+                </div>
+              ) : (
+                <div>
+                  {products?.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {products.map((product: any) => (
+                        <FeaturedCard key={product.id} product={product} />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-10">
+                      No products found matching your filters
+                    </div>
+                  )}
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="flex justify-center items-center mt-10 gap-2">
+                      <button
+                        onClick={() =>
+                          updateFilters({ page: Math.max(1, page - 1) })
+                        }
+                        disabled={page === 1}
+                        className="h-8 w-8"
+                      >
+                        <BsChevronLeft className="h-4 w-4 cursor-pointer" />
+                      </button>
+
+                      {Array.from({ length: totalPages }).map((_, index) => {
+                        const pageNumber = index + 1;
+                        return (
+                          <button
+                            key={pageNumber}
+                            className={`h-8 w-8 cursor-pointer ${
+                              page === pageNumber ? "bg-[#333D4C]" : "border"
+                            }`}
+                            onClick={() => updateFilters({ page: pageNumber })}
+                          >
+                            {pageNumber}
+                          </button>
+                        );
+                      })}
+
+                      <button
+                        onClick={() =>
+                          updateFilters({
+                            page: Math.min(totalPages, page + 1),
+                          })
+                        }
+                        disabled={page === totalPages}
+                        className="h-8 w-8 cursor-pointer"
+                      >
+                        <BsChevronRight className="h-4 w-4" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center mt-10 gap-2">
-                <button
-                  // variant="outline"
-                  // size="icon"
-                  onClick={() => updateFilters({ page: Math.max(1, page - 1) })}
-                  disabled={page === 1}
-                  className="h-8 w-8"
-                >
-                  <BsChevronLeft className="h-4 w-4" />
-                </button>
-
-                {Array.from({ length: totalPages }).map((_, index) => {
-                  const pageNumber = index + 1;
-                  const shouldShow =
-                    pageNumber === 1 ||
-                    pageNumber === totalPages ||
-                    (pageNumber >= page - 1 && pageNumber <= page + 1);
-
-                  if (!shouldShow) {
-                    if (pageNumber === 2 || pageNumber === totalPages - 1) {
-                      return (
-                        <span key={pageNumber} className="mx-1">
-                          ...
-                        </span>
-                      );
-                    }
-                    return null;
-                  }
-
-                  return (
-                    <button
-                      key={pageNumber}
-                      className={`h-8 w-8 ${
-                        page === pageNumber ? "bg-[#333D4C]" : "border"
-                      }`}
-                      onClick={() => updateFilters({ page: pageNumber })}
-                    >
-                      {pageNumber}
-                    </button>
-                  );
-                })}
-
-                <button
-                  // variant="outline"
-                  // size="icon"
-                  onClick={() =>
-                    updateFilters({ page: Math.min(totalPages, page + 1) })
-                  }
-                  disabled={page === totalPages}
-                  className="h-8 w-8"
-                >
-                  <BsChevronRight className="h-4 w-4" />
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>

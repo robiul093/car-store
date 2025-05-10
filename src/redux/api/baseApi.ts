@@ -5,7 +5,7 @@ import { RootState } from '../store';
 export const baseApi = createApi({
     reducerPath: 'baseApi',
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://l2-assignment2-eta.vercel.app/api',
+        baseUrl: 'http://localhost:5000/api',
         credentials: 'include',
         prepareHeaders: (headers, { getState }) => {
             headers.set('Content-Type', 'application/json');

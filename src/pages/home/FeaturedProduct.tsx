@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 export default function FeaturedProduct() {
 
     const { data, isLoading } = useGetAllCarsQuery(undefined);
-    const products = data?.data;
+    const products = data?.data?.result;
     // console.log(data, products)
 
     return (
