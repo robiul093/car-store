@@ -29,7 +29,7 @@ const reviews = [
 ];
 export default function Review() {
   return (
-    <div className="py-10">
+    <div className="py-5">
       <div>
         <h2 className="text-3xl">
           What Happy Customer <br />{" "}
@@ -44,11 +44,11 @@ export default function Review() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center gap-4 mt-7">
+      <div className="flex items-center justify-center gap-4 mt-7 px-2">
         {reviews.map((review) => (
           <div
             key={review.id}
-            className="flex flex-col w-[350px] items-center justify-center border-dashed border-white border p-4 rounded-lg shadow-md mb-4"
+            className="flex flex-col w-[380px] items-center justify-center border-dashed border-white border p-4 rounded-lg shadow-md mb-4"
           >
             <p className="text-gray-300 mb-2 text-start">{review.review}</p>
             <div className="flex text-start mb-2 flex-grow">
