@@ -1,6 +1,7 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { logOut } from "../redux/features/auth/authSlice";
+import { useEffect, useState } from "react";
 
 export default function NavBar() {
   const links = [
@@ -20,21 +21,35 @@ export default function NavBar() {
       name: "Dashboard",
       path: "/dashboard",
     },
-    // <NavLink to='/'><a>Home</a></NavLink>,
   ];
 
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const userName = user?.name;
+  const [scrolled, setScrolled] = useState(false);
 
   const handelLogout = () => {
     dispatch(logOut());
     navigate("/login");
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    document.addEventListener('scroll', handleScroll, { passive: true });
+    return () => document.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
+
   return (
-    <div className="navbar rounded-lg bg-[#202020] shadow-sm mb-2">
+    <div className={`navbar md:px-6 bg-[#202020] shadow-sm mb-2 fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      scrolled ? "py-2 bg-opacity-95" : "py-4"
+    }`}>
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -79,6 +94,7 @@ export default function NavBar() {
         <ul className="menu space-x-6 font-medium text-[16px] menu-horizontal px-1 text-white">
           {links.map((item) => (
             <NavLink
+              key={item.path}
               to={item.path}
               className={({ isActive }) =>
                 isActive

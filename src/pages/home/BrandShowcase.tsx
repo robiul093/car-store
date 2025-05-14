@@ -2,14 +2,14 @@
 import styled, { keyframes } from "styled-components";
 
 // Brand logo imports (replace with your actual logo files)
-import BMWLogo from "../../assets/react.svg";
-import MercedesLogo from "../../assets/react.svg";
-import AudiLogo from "../../assets/react.svg";
-import TeslaLogo from "../../assets/react.svg";
-import ToyotaLogo from "../../assets/react.svg";
-import FordLogo from "../../assets/react.svg";
-import PorscheLogo from "../../assets/react.svg";
-import HondaLogo from "../../assets/react.svg";
+import BMWLogo from "../../assets/bmw-seeklogo.png";
+import MercedesLogo from "../../assets/mercedes-benz-seeklogo.png";
+import AudiLogo from "../../assets/audi-seeklogo.png";
+import TeslaLogo from "../../assets/tesla-brand-.jpg";
+import ToyotaLogo from "../../assets/toyota.png";
+import FordLogo from "../../assets/ford-transparent.png";
+import PorscheLogo from "../../assets/porshe.png";
+import HondaLogo from "../../assets/honda.png";
 
 const brands = [
   { id: 1, name: "BMW", logo: BMWLogo },
@@ -98,10 +98,10 @@ const BrandItem = styled.div`
   transition: all 0.3s ease;
 
   img {
-    height: 40px;
-    width: auto;
+    height: 60px;
+    width: 60px;
     object-fit: contain;
-    filter: grayscale(100%) opacity(70%);
+    
     transition: all 0.3s ease;
   }
 

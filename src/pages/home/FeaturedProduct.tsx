@@ -38,7 +38,7 @@ export default function FeaturedProduct() {
                             <span className="loading loading-ring loading-xl"></span>
                         </div>
                     ) : (
-                        products?.slice(0, 6).map((product: any, index: number) => (
+                        products?.slice(0, 4).map((product: any, index: number) => (
                             <FeaturedCard key={index} product={product} />
                         ))
                     )

@@ -1,7 +1,9 @@
 import { MdOutlineArrowOutward } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { ReactNode } from "react";
 
 export type TProduct = {
+    year: ReactNode;
     brand: string,
     category: string,
     createdAt: string,

@@ -1,6 +1,5 @@
 import { baseApi } from "../../api/baseApi";
 
-// Update your productApi.ts to properly transform parameters
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getAllCars: builder.query({
@@ -10,16 +9,11 @@ export const productApi = baseApi.injectEndpoints({
           limit: params?.limit || 9,
         };
 
-        // Transform search to searchTerm
         if (params?.search) backendParams.searchTerm = params.search;
-        
-        // Add other filters only if they have values
         if (params?.brand) backendParams.brand = params.brand;
         if (params?.category) backendParams.category = params.category;
         if (params?.['price[gte]']) backendParams['price[gte]'] = params['price[gte]'];
         if (params?.['price[lte]']) backendParams['price[lte]'] = params['price[lte]'];
-        
-        // Transform sorting
         if (params?.sortBy) {
           backendParams.sort = `${params.sortBy}:${params.sortOrder || 'desc'}`;
         }
@@ -27,11 +21,19 @@ export const productApi = baseApi.injectEndpoints({
         return {
           url: '/cars',
           method: 'GET',
-          params: backendParams
+          params: backendParams,
         };
       },
+    }),
+
+    // 🔍 Get single car by ID
+    getSingleCar: builder.query({
+      query: (id: string) => ({
+        url: `/cars/${id}`,
+        method: 'GET',
+      }),
     }),
   }),
 });
 
-export const { useGetAllCarsQuery } = productApi;
+export const { useGetAllCarsQuery, useGetSingleCarQuery } = productApi;

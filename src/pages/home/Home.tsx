@@ -8,7 +8,7 @@ import TrendingVehicles from "./TrendingVehicles";
 
 export default function Home() {
     return (
-        <div className="space-y-4">
+        <div className="space-y-4 mt-[90px]">
             <Banner />
             <BrandShowcase />
             <FeaturedProduct />

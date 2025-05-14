@@ -5,7 +5,7 @@ import AboutBanner from "./AboutBanner";
 
 export default function AboutPage() {
     return (
-        <div>
+        <div className="space-y-4 mt-[90px]">
             <NavBar />
             <AboutBanner />
             <WhyChooseUs />

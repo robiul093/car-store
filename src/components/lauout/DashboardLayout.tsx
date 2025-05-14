@@ -16,7 +16,7 @@ export default function DashboardLayout() {
   }, []);
 
   return (
-    <div className="md:flex h-screen">
+    <div className="md:flex h-full">
       {/* Sidebar */}
       <div className="md:w-64 bg-gray-800 text-white p-5 rounded-2xl">
         <h2 className="text-xl font-bold mb-5">Dashboard</h2>
@@ -62,6 +62,18 @@ export default function DashboardLayout() {
             </>
           ) : (
             <>
+              <li className="p-2">
+                <NavLink
+                  to="/dashboard/user/overview"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "text-white border-b-2 border-b-green-400 px-3 pb-1 font-semibold"
+                      : "hover:bg-white hover:text-black px-3 py-1 rounded"
+                  }
+                >
+                  Overview
+                </NavLink>
+              </li>
               <li className="p-2">
                 <NavLink
                   to="/dashboard/user/profile"
