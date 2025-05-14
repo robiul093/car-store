@@ -1,10 +1,9 @@
-
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination } from 'swiper/modules';
-import { FaHeart, FaRegHeart } from 'react-icons/fa';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const trendingCars = [
   {
@@ -27,8 +26,7 @@ const trendingCars = [
   },
   {
     id: 3,
-    image:
-      "https://www.hdcarwallpapers.com/thumbs/2024/ferrari_550_gto-t2.jpg",
+    image: "https://www.hdcarwallpapers.com/thumbs/2024/ferrari_550_gto-t2.jpg",
     year: 2020,
     mileage: "22,000 km",
     price: "$19,999",
@@ -57,58 +55,66 @@ const trendingCars = [
 
 const TrendingVehicles = () => {
   return (
-    <section className="px-4 py-6">
-      <h2 className="text-4xl font-bold mb-4">Trending <span className='text-[#c7b933]'>Vehicles</span></h2>
-
-      <Swiper
-        modules={[Navigation, Pagination]}
-        spaceBetween={20}
-        slidesPerView={1}
-        navigation
-        pagination={{ clickable: true }}
-        breakpoints={{
-          640: { slidesPerView: 1 },
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
-        }}
-        className="pb-10"
-      >
-        {trendingCars.map((car) => (
-          <SwiperSlide key={car.id}>
-            <div className="card w-full bg-base-100 shadow-xl relative">
-              <figure className="relative">
-                <img
-                  src={car.image}
-                  alt={`Car ${car.id}`}
-                  className="h-40 w-full object-cover"
-                />
-                <div className="badge badge-error absolute top-2 left-2 text-white">
-                  Hot
-                </div>
-                <button className="absolute top-2 right-2 text-white text-xl">
-                  {car.isFavorite ? (
-                    <FaHeart className="text-red-500" />
-                  ) : (
-                    <FaRegHeart />
-                  )}
-                </button>
-              </figure>
-              <div className="card-body p-4">
-                <h3 className="font-semibold text-lg">Year: {car.year}</h3>
-                <p className="text-sm">Mileage: {car.mileage}</p>
-                <p className="text-sm font-bold text-[#03995B]">
-                  Price: {car.price}
-                </p>
-                <div className="card-actions justify-end mt-4">
-                  <button className="btn btn-sm btn-outline border-[#03995B] text-[#03995B] hover:bg-[#03995B] hover:text-white">
-                    Compare
+    <section className=" py-6">
+      {/* <h2 className="text-4xl font-bold mb-4">
+        Trending <span className="text-[#c7b933]">Vehicles</span>
+      </h2> */}
+      <div className=" text-start">
+        <h2 className="md:px-10 text-3xl md:text-4xl mb-10">
+          Trending <span className="text-[#c7b933]">Vehicles</span>
+        </h2>
+      </div>
+      <div className="md:px-3">
+        <Swiper
+          modules={[Navigation, Pagination]}
+          spaceBetween={20}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          breakpoints={{
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          className="pb-10 md:px-14"
+        >
+          {trendingCars.map((car) => (
+            <SwiperSlide key={car.id}>
+              <div className="card w-full bg-base-100 shadow-xl relative">
+                <figure className="relative">
+                  <img
+                    src={car.image}
+                    alt={`Car ${car.id}`}
+                    className="h-40 w-full object-cover"
+                  />
+                  <div className="badge badge-error absolute top-2 left-2 text-white">
+                    Hot
+                  </div>
+                  <button className="absolute top-2 right-2 text-white text-xl">
+                    {car.isFavorite ? (
+                      <FaHeart className="text-red-500" />
+                    ) : (
+                      <FaRegHeart />
+                    )}
                   </button>
+                </figure>
+                <div className="card-body p-4">
+                  <h3 className="font-semibold text-lg">Year: {car.year}</h3>
+                  <p className="text-sm">Mileage: {car.mileage}</p>
+                  <p className="text-sm font-bold text-[#03995B]">
+                    Price: {car.price}
+                  </p>
+                  <div className="card-actions justify-end mt-4">
+                    <button className="btn btn-sm btn-outline border-[#03995B] text-[#03995B] hover:bg-[#03995B] hover:text-white">
+                      Compare
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
     </section>
   );
 };

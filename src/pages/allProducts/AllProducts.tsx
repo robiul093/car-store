@@ -233,7 +233,7 @@ function AllProductsPage() {
   return (
     <div>
       <NavBar />
-      <div className="w-[90%] mx-auto pt-1 pb-10">
+      <div className="w-[90%] mx-auto pt-1 pb-10 mt-[90px]">
         <div>
           <h2 className="text-2xl text-start font-bold mb-6">All Products</h2>
           <div>
