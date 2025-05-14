@@ -29,7 +29,7 @@ export default function FAQ() {
     ];
 
     return (
-        <div className=" md:px-14 my-20 items-center">
+        <div className=" md:px-10 my-20 items-center">
             <div className=" text-start">
                 <h2 className="text-3xl md:text-4xl mb-10">Frequently Asked <br /> <span className="text-[#c7b933]">Questions</span></h2>
 

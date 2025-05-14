@@ -7,9 +7,4 @@ export default function Dashboard() {
     const defaultRoute = user?.role === 'admin' ? "/dashboard/admin/manage-users" : "/dashboard/user/orders"
 
     return <Navigate to={defaultRoute} replace />
-    return (
-        <div>
-            this is dashboard
-        </div>
-    )
 };
